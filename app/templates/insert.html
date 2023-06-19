@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        table, th, td 
+        {
+            border: solid 1px #ddd;
+            border-collapse: collapse;
+            padding: 2px 3px;
+            text-align: center;
+        }
+        th { 
+            font-weight:bold;
+        }
+    </style>
+</head>
+<body>
+
+<FORM NAME="myform" ACTION="" METHOD="POST">
+    <label for="artistid">Enter Artist ID:</label>
+    <INPUT TYPE="artistid" NAME="inputbox" VALUE=""><P></P>
+    <!-- <label for="name">Enter Artist Name:</label>
+    <INPUT TYPE="name" NAME="artistname" VALUE=""><P></P> -->
+    <!-- <INPUT TYPE="button" NAME="Find" Value="Click" onClick="insert(this.form)"> -->
+</FORM>
+<p id="showData"></p>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script>
+  const url = 'http://localhost:5000/insert';
+  
+  let insert = (form) => {
+    $.getJSON(url + "/" + form.inputbox.value, function(result) {
+      //document.write(result);
+      rendertable([result]);
+    });
+    //    $.getJSON(urlsearch, { id : form.inputbox.value }, function(result) { rendertable(result); });
+
+  }
+
+  let rendertablebase = () => {
+    mytable = [{'Song':'song1'}, {'Song':'song2'}];
+    rendertable(mytable);
+  }
+
+  let rendertable = (mytable) => {
+    //$.each(result, function(i, field){
+    //  $("div").append(field + " ");
+   //});
+    console.log(mytable);
+    // the json data.
+    const mytable2 = [
+      {'Book ID': '1', 'Book Name': 'Challenging Times',
+       'Category': 'Business', 'Price': '125.60'
+      },
+      {'Book ID': '2', 'Book Name': 'Learn JavaScript',
+       'Category': 'Programming', 'Price': '56.00'
+      },
+      {'Book ID': '3', 'Book Name': 'Popular Science',
+       'Category': 'Science', 'Price': '210.40'
+      }
+    ]
+
+    // Extract value from table header. 
+    // ('Book ID', 'Book Name', 'Category' and 'Price')
+    let col = [];
+    for (let i = 0; i < mytable.length; i++) {
+      for (let key in mytable[i]) {
+        if (col.indexOf(key) === -1) {
+          col.push(key);
+        }
+      }
+    }
+
+    // Create table.
+    const table = document.createElement("table");
+
+    // Create table header row using the extracted headers above.
+    let tr = table.insertRow(-1);                   // table row.
+
+    for (let i = 0; i < col.length; i++) {
+      let th = document.createElement("th");      // table header.
+      th.innerHTML = col[i];
+      tr.appendChild(th);
+    }
+
+    // add json data to the table as rows.
+    for (let i = 0; i < mytable.length; i++) {
+
+      tr = table.insertRow(-1);
+
+      for (let j = 0; j < col.length; j++) {
+        let tabCell = tr.insertCell(-1);
+        tabCell.innerHTML = mytable[i][col[j]];
+      }
+    }
+
+    // Now, add the newly created table with json data, to a container.
+    const divShowData = document.getElementById('showData');
+    divShowData.innerHTML = "";
+    divShowData.appendChild(table);
+  }
+</script>
+
+
+</body>
+</html>
